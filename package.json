@@ -20,6 +20,7 @@
   "dependencies": {
     "discord.js": "^14.3.0",
     "dotenv": "^16.0.1",
+    "keyv": "^4.4.1",
     "node-mailjet": "^5.1.1"
   },
   "devDependencies": {
