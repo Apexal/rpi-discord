@@ -14,11 +14,6 @@ import { sendVerificationEmail } from "./email";
 import { keyv, UserCache } from "./cache";
 import { verifyRPIUser } from "./discord";
 
-// ---------------------
-// Environment Variables
-// ---------------------
-const DISCORD_BOT_TOKEN = process.env["DISCORD_BOT_TOKEN"];
-
 export const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -77,7 +72,7 @@ client.on("interactionCreate", async (interaction) => {
   ) {
     const rpiEmail = interaction.fields.getTextInputValue("rpi-email").trim();
 
-    const domain = process.env.SCHOOL_EMAIL_DOMAIN!;
+    const domain = process.env.ALLOWED_EMAIL_DOMAIN!;
 
     if (process.env.NODE_ENV !== "development") {
       // Check that email is of proper domain
@@ -182,4 +177,4 @@ client.on("messageCreate", async (message) => {
   }
 });
 
-client.login(DISCORD_BOT_TOKEN);
+client.login(process.env["DISCORD_BOT_TOKEN"]!);

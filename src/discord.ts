@@ -59,14 +59,22 @@ export async function verifyRPIUser(userCache: UserCache) {
     return;
   }
 
-  member.setNickname(serverNickname);
-  console.log("Set user nickname upon verification", {
-    userCache,
-    serverNickname,
-  });
+  try {
+    member.setNickname(serverNickname);
+    console.log("Set user nickname upon verification", {
+      userCache,
+      serverNickname,
+    });
+  } catch (error) {
+    // TODO
+  }
 
   if (userRole.roleId) {
-    member.roles.add(userRole.roleId);
-    console.log("Added role to user upon verification", { userCache });
+    try {
+      member.roles.add(userRole.roleId);
+      console.log("Added role to user upon verification", { userCache });
+    } catch (error) {
+      // TODO
+    }
   }
 }
