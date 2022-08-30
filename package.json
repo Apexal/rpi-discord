@@ -4,6 +4,7 @@
   "description": "Simple bot that allows Discord users to verify their student status via a secret sent to their school email.",
   "main": "build/index.js",
   "scripts": {
+    "dev": "npm run build && NODE_ENV=development node .",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
