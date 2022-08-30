@@ -14,6 +14,8 @@ import { sendVerificationEmail } from "./email";
 import { keyv, UserCache } from "./cache";
 import { verifyRPIUser } from "./discord";
 
+const SERVER_NAME = process.env.SERVER_NAME;
+
 export const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -33,8 +35,7 @@ client.once("ready", (c) => {
 client.on("guildMemberAdd", (member) => {
   const row = generateRoleButtonActionRow(roles);
   member.send({
-    content:
-      "Welcome to the RPI ITWS Discord server! Please select the role that best describes you.",
+    content: `Welcome to the ${SERVER_NAME} server! Please select the role that best describes you.`,
     components: [row],
   });
 });
@@ -170,8 +171,7 @@ client.on("messageCreate", async (message) => {
 
     console.log("Successfully verified " + message.author.username);
     await message.reply({
-      content:
-        "Successfully verified! You now have access to the ITWS Discord server.",
+      content: `Successfully verified! You now have access to the ${SERVER_NAME} server.`,
     });
     await keyv.delete(message.author.id);
   }
