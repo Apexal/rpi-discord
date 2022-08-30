@@ -28,7 +28,7 @@ export const roles: UserRole[] = [
   },
   {
     label: "RPI Alumn",
-    customId: "current-rpi-alumn",
+    customId: "rpi-alumn",
     buttonStyle: ButtonStyle.Secondary,
     emoji: "🧑‍🎓",
   },
