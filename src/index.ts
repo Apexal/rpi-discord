@@ -19,9 +19,10 @@ import { verifyRPIUser } from "./discord";
 // ---------------------
 const DISCORD_BOT_TOKEN = process.env["DISCORD_BOT_TOKEN"];
 
-const client = new Client({
+export const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.DirectMessages,
     GatewayIntentBits.MessageContent,
@@ -68,16 +69,34 @@ client.on("interactionCreate", async (interaction) => {
   )
     return;
 
-  const fullName = interaction.fields.getTextInputValue("full-name");
+  const fullName = interaction.fields.getTextInputValue("full-name").trim();
 
   if (
     interaction.customId === "current-rpi-student-modal" ||
     interaction.customId === "current-rpi-faculty-modal"
   ) {
-    const rpiEmail = interaction.fields.getTextInputValue("rpi-email");
-    const rpiUsername = rpiEmail.replace("@rpi.edu", "");
+    const rpiEmail = interaction.fields.getTextInputValue("rpi-email").trim();
 
-    const verificationCode = Math.random().toString(36).slice(6);
+    const domain = process.env.SCHOOL_EMAIL_DOMAIN!;
+
+    if (process.env.NODE_ENV !== "development") {
+      // Check that email is of proper domain
+      console.log({
+        rpiEmail,
+        domain,
+      });
+
+      if (!rpiEmail.endsWith(domain)) {
+        interaction.reply(
+          `🛑 You did not provide a valid **@${domain}** email address. Try again or select a role that better fits you.`
+        );
+        return;
+      }
+    }
+
+    const rpiUsername = rpiEmail.replace("@" + domain, "");
+
+    const verificationCode = Math.random().toString(36).slice(6).toUpperCase();
     const role = roles.find(
       (role) => role.customId + "-modal" === interaction.customId
     );
@@ -93,8 +112,9 @@ client.on("interactionCreate", async (interaction) => {
     };
 
     if (role.customId === "current-rpi-student") {
-      userCache.graduationYear =
-        interaction.fields.getTextInputValue("graduation-year");
+      userCache.graduationYear = interaction.fields
+        .getTextInputValue("graduation-year")
+        .trim();
     }
 
     try {
@@ -109,14 +129,17 @@ client.on("interactionCreate", async (interaction) => {
       return;
     }
 
-    try {
-      // await sendVerificationEmail(role, fullName, rpiEmail, verificationCode);
-    } catch (error) {
-      console.error("Failed to send verification email", {
-        error,
-        userCache,
-      });
-      return;
+    // Send verification email if not in development mode
+    if (process.env.NODE_ENV !== "development") {
+      try {
+        await sendVerificationEmail(role, fullName, rpiEmail, verificationCode);
+      } catch (error) {
+        console.error("Failed to send verification email", {
+          error,
+          userCache,
+        });
+        return;
+      }
     }
 
     try {
@@ -147,7 +170,7 @@ client.on("messageCreate", async (message) => {
       userCache.userRoleCustomId === "current-rpi-student" ||
       userCache.userRoleCustomId === "current-rpi-faculty"
     ) {
-      verifyRPIUser(userCache);
+      await verifyRPIUser(userCache);
     }
 
     console.log("Successfully verified " + message.author.username);
