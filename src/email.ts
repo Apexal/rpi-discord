@@ -8,6 +8,7 @@ const mailjet = new Mailjet({
   apiSecret: process.env.MAILJET_API_SECRET,
 });
 
+/** Send an email to a user with their verification code. */
 export function sendVerificationEmail(
   role: UserRole,
   userFullName: string,
@@ -26,24 +27,14 @@ export function sendVerificationEmail(
             Email: userEmail,
           },
         ],
+        TemplateID: process.env.MAILJET_TEMPLATE_ID,
+        TemplateLanguage: true,
         Subject: `[${SERVER_NAME}] ${role.emoji} Verify ${role.label} Status`,
-        HTMLPart: `
-          <p>Hello, ${userFullName}!</p>
-
-          <p>To verify your identity on the <b>${SERVER_NAME} server</b> as an <b>${role.label}</b>, please reply to the Discord bot with the following verification code:</p>
-
-          <h1>${verificationCode}</h1>
-
-          <p>Thank you.</p>
-        `,
-        TextPart: `
-          Hello, ${userFullName}!
-
-          To verify your identity on the ${SERVER_NAME} server as an ${role.label}, please reply to the Discord bot with the following verification code:
-
-          ${verificationCode}
-
-          Thank you.`,
+        Variables: {
+          server_name: SERVER_NAME,
+          firstname: userFullName.split(" ")[0],
+          verification_code: verificationCode,
+        },
       },
     ],
   };
