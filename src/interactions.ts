@@ -21,7 +21,7 @@ export function generateRoleButtonActionRow(roles: UserRole[]) {
 
 export function generateRoleModal(role: UserRole) {
   const modal = new ModalBuilder()
-    .setCustomId("current-student-modal")
+    .setCustomId(role.customId + "-modal")
     .setTitle(`Verify ${role.label} Status`);
 
   const nameInput = new TextInputBuilder()
