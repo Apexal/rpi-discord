@@ -84,11 +84,6 @@ client.on("interactionCreate", async (interaction) => {
 
     if (process.env.NODE_ENV !== "development") {
       // Check that email is of proper domain
-      console.log({
-        rpiEmail,
-        domain,
-      });
-
       if (!rpiEmail.endsWith(domain)) {
         interaction.reply(
           `🛑 You did not provide a valid **@${domain}** email address. Try again or select a role that better fits you.`

@@ -7,6 +7,7 @@ import {
 } from "discord.js";
 import { UserRole } from "./roles";
 
+/** Generate a row of buttons from the given user roles. */
 export function generateRoleButtonActionRow(roles: UserRole[]) {
   return new ActionRowBuilder().addComponents(
     roles.map((role) =>
@@ -19,6 +20,7 @@ export function generateRoleButtonActionRow(roles: UserRole[]) {
   ) as ActionRowBuilder<ButtonBuilder>;
 }
 
+/** Generate a modal with input fields determined by the role. */
 export function generateRoleModal(role: UserRole) {
   const modal = new ModalBuilder()
     .setCustomId(role.customId + "-modal")
@@ -35,6 +37,7 @@ export function generateRoleModal(role: UserRole) {
     ) as ActionRowBuilder<TextInputBuilder>
   );
 
+  // RPI-affiliated users are asked for their RPI email
   if (
     role.customId === "current-rpi-student" ||
     role.customId === "current-rpi-faculty"
@@ -51,13 +54,15 @@ export function generateRoleModal(role: UserRole) {
     );
   }
 
-  if (
-    role.customId === "current-rpi-student" ||
-    role.customId === "rpi-alumn"
-  ) {
+  // Current students and alum are asked for their graduation year
+  if (role.customId === "current-rpi-student" || role.customId === "rpi-alum") {
     const graduationYearInput = new TextInputBuilder()
       .setCustomId("graduation-year")
-      .setLabel("What year will/did you graduate?")
+      .setLabel(
+        `What year ${
+          role.customId === "current-rpi-student" ? "will" : "did"
+        } you graduate?`
+      )
       .setStyle(TextInputStyle.Short);
     modal.addComponents(
       new ActionRowBuilder().addComponents(
@@ -66,6 +71,7 @@ export function generateRoleModal(role: UserRole) {
     );
   }
 
+  // Guests are asked what their purpose in joining is
   if (role.customId === "guest") {
     const purposeInput = new TextInputBuilder()
       .setCustomId("purpose")

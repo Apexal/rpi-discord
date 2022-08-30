@@ -35,7 +35,7 @@ export const roles: UserRole[] = [
   },
   {
     label: "RPI Alumn",
-    customId: "rpi-alumn",
+    customId: "rpi-alum",
     buttonStyle: ButtonStyle.Secondary,
     emoji: "🧑‍🎓",
     externalURL: "https://forms.gle/DisKuZy4AJf17pk69",
