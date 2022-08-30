@@ -27,9 +27,9 @@ export function sendVerificationEmail(
             Email: userEmail,
           },
         ],
-        TemplateID: process.env.MAILJET_TEMPLATE_ID,
+        TemplateID: +process.env.MAILJET_TEMPLATE_ID!,
         TemplateLanguage: true,
-        Subject: `[${SERVER_NAME}] ${role.emoji} Verify ${role.label} Status`,
+        Subject: `${role.emoji} Verify ${role.emoji} Status`,
         Variables: {
           server_name: SERVER_NAME,
           firstname: userFullName.split(" ")[0],
