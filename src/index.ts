@@ -4,6 +4,7 @@ dotenv.config();
 import { Client, GatewayIntentBits } from "discord.js";
 import { generateRoleModal, generateRoleButtonActionRow } from "./interactions";
 import { roles } from "./roles";
+import { sendVerificationEmail } from "./email";
 
 // ---------------------
 // Environment Variables
@@ -59,6 +60,12 @@ client.on("interactionCreate", async (interaction) => {
   if (selectedRole) {
     const modal = generateRoleModal(selectedRole);
     await interaction.showModal(modal);
+    await sendVerificationEmail(
+      selectedRole,
+      "Frank Matranga",
+      "frank@matranga.family",
+      "abc123"
+    );
   }
 });
 
