@@ -72,6 +72,12 @@ client.on("interactionCreate", async (interaction) => {
   )
     return;
 
+  const role = roles.find(
+    (role) => role.customId + "-modal" === interaction.customId
+  );
+
+  if (!role) return;
+
   const fullName = interaction.fields.getTextInputValue("full-name").trim();
 
   if (
@@ -95,11 +101,6 @@ client.on("interactionCreate", async (interaction) => {
     const rpiUsername = rpiEmail.replace("@" + domain, "");
 
     const verificationCode = Math.random().toString(36).slice(6).toUpperCase();
-    const role = roles.find(
-      (role) => role.customId + "-modal" === interaction.customId
-    );
-
-    if (!role) return;
 
     const userCache: UserCache = {
       userRoleCustomId: role.customId,
@@ -152,10 +153,23 @@ client.on("interactionCreate", async (interaction) => {
         userCache,
       });
     }
-
+  } else if (interaction.customId === "guest-modal") {
+    // If guest, just alert moderators and ask them to manually verify
+    const purpose = interaction.fields.getTextInputValue("purpose").trim();
     serverLog(
-      `ℹ️ <@${userCache.discordUserId}> started to verify themselves as ${role.emoji} ${role.label} **${userCache.fullName}** (${userCache.rpiUsername}).`
+      `🚨 ${interaction.user} wants to enter as ${role.emoji} ${role.label} **${fullName}** with reason:\n\`\`\`"${purpose}"\`\`\`Click on them and add the @Verified role to give them access.`
     );
+
+    try {
+      await interaction.reply({
+        content:
+          "The Moderators have been notified and will manually review and approve/deny your request to join.",
+      });
+    } catch (error) {
+      console.warn("Failed to send info message", {
+        error,
+      });
+    }
   }
 });
 
