@@ -1,6 +1,6 @@
 {
   "name": "student-discord-bot",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Simple bot that allows Discord users to verify their student status via a secret sent to their school email.",
   "main": "build/index.js",
   "scripts": {

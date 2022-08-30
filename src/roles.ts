@@ -11,6 +11,8 @@ export type UserRole = {
   emoji: ComponentEmojiResolvable;
   /** Discord role ID */
   roleId?: string;
+  /** Optional URL to display when this role is selected */
+  externalURL?: string;
 };
 
 export const roles: UserRole[] = [
@@ -19,6 +21,7 @@ export const roles: UserRole[] = [
     customId: "current-rpi-student",
     buttonStyle: ButtonStyle.Primary,
     emoji: "🏫",
+    roleId: "979874983650148382",
   },
   {
     label: "Current RPI Faculty",
@@ -31,6 +34,7 @@ export const roles: UserRole[] = [
     customId: "rpi-alumn",
     buttonStyle: ButtonStyle.Secondary,
     emoji: "🧑‍🎓",
+    externalURL: "https://forms.gle/DisKuZy4AJf17pk69",
   },
   {
     label: "Guest",

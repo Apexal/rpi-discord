@@ -13,6 +13,7 @@ import { roles } from "./roles";
 import { sendVerificationEmail } from "./email";
 import { keyv, UserCache } from "./cache";
 import { verifyRPIUser } from "./discord";
+import { serverLog } from "./log";
 
 const SERVER_NAME = process.env.SERVER_NAME;
 
@@ -50,8 +51,12 @@ client.on("interactionCreate", async (interaction) => {
   );
 
   if (selectedRole) {
-    const modal = generateRoleModal(selectedRole);
-    await interaction.showModal(modal);
+    if (selectedRole.externalURL) {
+      await interaction.reply("Please navigate to " + selectedRole.externalURL);
+    } else {
+      const modal = generateRoleModal(selectedRole);
+      await interaction.showModal(modal);
+    }
   } else {
     console.warn(`User pressed an unknown button`, { interaction });
   }
@@ -148,6 +153,10 @@ client.on("interactionCreate", async (interaction) => {
         userCache,
       });
     }
+
+    serverLog(
+      `ℹ️ <@${userCache.discordUserId}> started to verify themselves as ${role.emoji} ${role.label} **${userCache.fullName}** (${userCache.rpiUsername}).`
+    );
   }
 });
 
@@ -158,6 +167,15 @@ client.on("messageCreate", async (message) => {
 
   const messageCleaned = message.content.trim().toLowerCase();
 
+  const role = roles.find(
+    (role) => role.customId === userCache.userRoleCustomId
+  );
+
+  if (!role) {
+    // TODO
+    return;
+  }
+
   if (
     userCache.verificationCode &&
     messageCleaned.includes(userCache.verificationCode.toLowerCase())
@@ -167,6 +185,9 @@ client.on("messageCreate", async (message) => {
       userCache.userRoleCustomId === "current-rpi-faculty"
     ) {
       await verifyRPIUser(userCache);
+      serverLog(
+        `✅ <@${userCache.discordUserId}> has been verified as ${role.emoji} ${role.label} **${userCache.fullName}** (${userCache.rpiUsername})`
+      );
     }
 
     console.log("Successfully verified " + message.author.username);
