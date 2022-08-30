@@ -31,9 +31,8 @@ function generateDiscordNickname({
   return `${name} ${suffix}`;
 }
 
-export async function verifyRPIUser(userCache: UserCache) {
-  const { discordUserId, userRoleCustomId, fullName, graduationYear } =
-    userCache;
+export async function verifyUser(userCache: UserCache) {
+  const { discordUserId, userRoleCustomId } = userCache;
 
   const userRole = roles.find((role) => role.customId === userRoleCustomId);
 

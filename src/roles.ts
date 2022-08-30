@@ -1,5 +1,8 @@
 import { ButtonStyle, ComponentEmojiResolvable } from "discord.js";
 
+const DISCORD_SERVER_VERIFIED_ROLE_ID =
+  process.env.DISCORD_SERVER_VERIFIED_ROLE_ID;
+
 export type UserRole = {
   /** User-facing label */
   label: string;
@@ -21,13 +24,14 @@ export const roles: UserRole[] = [
     customId: "current-rpi-student",
     buttonStyle: ButtonStyle.Primary,
     emoji: "🏫",
-    roleId: "979874983650148382",
+    roleId: DISCORD_SERVER_VERIFIED_ROLE_ID,
   },
   {
     label: "Current RPI Faculty",
     customId: "current-rpi-faculty",
     buttonStyle: ButtonStyle.Secondary,
     emoji: "🧑‍🏫",
+    roleId: DISCORD_SERVER_VERIFIED_ROLE_ID,
   },
   {
     label: "RPI Alumn",

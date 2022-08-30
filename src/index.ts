@@ -12,7 +12,7 @@ import { generateRoleModal, generateRoleButtonActionRow } from "./interactions";
 import { roles } from "./roles";
 import { sendVerificationEmail } from "./email";
 import { keyv, UserCache } from "./cache";
-import { verifyRPIUser } from "./discord";
+import { verifyUser } from "./discord";
 import { serverLog } from "./log";
 
 const SERVER_NAME = process.env.SERVER_NAME;
@@ -184,7 +184,7 @@ client.on("messageCreate", async (message) => {
       userCache.userRoleCustomId === "current-rpi-student" ||
       userCache.userRoleCustomId === "current-rpi-faculty"
     ) {
-      await verifyRPIUser(userCache);
+      await verifyUser(userCache);
       serverLog(
         `✅ <@${userCache.discordUserId}> has been verified as ${role.emoji} ${role.label} **${userCache.fullName}** (${userCache.rpiUsername})`
       );
