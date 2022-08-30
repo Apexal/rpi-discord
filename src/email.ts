@@ -19,7 +19,7 @@ export function sendVerificationEmail(
       {
         From: {
           Email: process.env.MAILJET_FROM_EMAIL,
-          Name: SERVER_NAME,
+          Name: process.env.SERVER_NAME,
         },
         To: [
           {

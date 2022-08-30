@@ -14,7 +14,7 @@ export async function serverLog(
       return null;
     }
     if (channel?.type === ChannelType.GuildText) {
-      return channel.send(message);
+      return await channel.send(message);
     }
   } catch (error) {
     console.warn("Failed to server log message", { message, error });

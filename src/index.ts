@@ -34,6 +34,8 @@ client.once("ready", (c) => {
 
 /** When a user first joins the server, send them a welcome message and ask them to select a role. */
 client.on("guildMemberAdd", (member) => {
+  console.log("New server join", { member });
+
   const row = generateRoleButtonActionRow(roles);
   member.send({
     content: `Welcome to the ${SERVER_NAME} server! Please select the role that best describes you.`,
@@ -145,7 +147,9 @@ client.on("interactionCreate", async (interaction) => {
 
     try {
       await interaction.reply({
-        content: `Thanks, ${fullName}! Check **${rpiEmail}** for the verification code and simply copy/paste it here to finish.`,
+        content: `Thanks, ${
+          fullName.split(" ")[0]
+        }! Check **${rpiEmail}** for the verification code and simply copy/paste it here to finish.\n\Check your spam folder at https://respite.rpi.edu/ if you do not see it within a few minutes.`,
       });
     } catch (error) {
       console.warn("Failed to send thank you message", {
