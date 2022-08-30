@@ -1,5 +1,6 @@
+import { client } from ".";
 import { UserCache } from "./cache";
-import { UserRole } from "./roles";
+import { roles, UserRole } from "./roles";
 
 function generateDiscordNickname({
   fullName,
@@ -30,10 +31,42 @@ function generateDiscordNickname({
   return `${name} ${suffix}`;
 }
 
-export function verifyRPIUser(userCache: UserCache) {
+export async function verifyRPIUser(userCache: UserCache) {
   const { discordUserId, userRoleCustomId, fullName, graduationYear } =
     userCache;
 
+  const userRole = roles.find((role) => role.customId === userRoleCustomId);
+
+  if (!userRole) {
+    // TODO
+    return;
+  }
+
   const serverNickname = generateDiscordNickname(userCache);
   console.log(serverNickname);
+
+  const guild = await client.guilds.fetch(process.env.DISCORD_SERVER_ID!);
+
+  if (!guild) {
+    // TODO
+    return;
+  }
+
+  const member = await guild.members.fetch(discordUserId);
+
+  if (!member) {
+    // TODO
+    return;
+  }
+
+  member.setNickname(serverNickname);
+  console.log("Set user nickname upon verification", {
+    userCache,
+    serverNickname,
+  });
+
+  if (userRole.roleId) {
+    member.roles.add(userRole.roleId);
+    console.log("Added role to user upon verification", { userCache });
+  }
 }
